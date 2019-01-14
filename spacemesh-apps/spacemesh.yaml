@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: spacemesh
+  name: spacemesh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spacemesh
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: spacemesh
+    spec:
+      containers:
+      - image: beckmani/spacemesh
+        name: spacemesh
+        ports:
+        - containerPort: 9090
+        resources: {}
+status: {}
