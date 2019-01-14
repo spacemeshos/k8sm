@@ -1,35 +1,41 @@
-# k8sm
+# k8s 4 Spacemesh
 
-mini spacemesh testnet inside k8s
+Mini Spacemesh testnet inside k8s
 
 ## Prequisites
 
 - Terraform (setup eks + worker nodes + IAM roles etc)
-- AWS cli tools + a a valid IAM user with Admin provilidges (could be downnsacled once stable)
-- kubectl
-- helm
-- jq
+- AWS cli tools + a a valid IAM user with Admin privilidges (should be down-sacled once stabled)
+- kubectl - kubernetes cli tool
+- helm - kuberentes "package manager"
+- jq - json query tool very useful when managing clusters and working with `json` outputs
 - aws-iam-authenticator
 
-## consifg K8s storage class
+## deployment/terraform
 
-## deployment/k8s/terraform
+See [deployment/README.md](deployment/README.md)
 
-## deployment/k8s/addons
+## k8s-apps
 
-## deployment/k8s/addons/helm
+This dir will include all the add-ons needed (this will probebly change in time):
 
-## deployment/k8s/addons/efk
+- 01.helm - Installation of helm (./install.sh doe sthe trick at the moment) 
+  see -> [k8s-apps/01.helm-install/README.md](k8s-apps/01.helm-install/README.md)
+- 02.efk - install elasticsearch operator and efk for logging stack
 
-## deployment/k8s/addons/prometheus-operator
+## spacemesh-apps [ WIP ]
 
-## deployment/k8s/addons/elasticsearch-operator
+Curentelly let's just launch an instance of spacemesh-go app
+Next steps:
 
-
+- Define how to pass the instance token and ip to the rest of the nodes in the mesh (hint: probebly use init containers)
+- Build test scearios && configuration files to setup various testing scenarios.
 
 ## Quickstart
 
-* install perreqs
-* setup aws-cli (`aws configure --profile spacemesh`)
-* `export AWS_PROFILE=spacemesh` 
-* 
+- Install perreqs
+- setup aws-cli (`aws configure --profile spacemesh`)
+- set your AWS profile:
+    ```sh
+    export AWS_PROFILE=spacemesh
+    ```
