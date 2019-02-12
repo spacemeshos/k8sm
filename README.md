@@ -22,7 +22,7 @@ This dir will include all the add-ons needed (this will probebly change in time)
 - 01.helm - Installation of helm (./install.sh doe sthe trick at the moment) 
   see -> [k8s-apps/01.helm-install/README.md](k8s-apps/01.helm-install/README.md)
 - 02.efk - install elasticsearch operator and efk for logging stack
-
+-
 ## spacemesh-apps [ WIP ]
 
 Curentelly let's just launch an instance of spacemesh-go app
