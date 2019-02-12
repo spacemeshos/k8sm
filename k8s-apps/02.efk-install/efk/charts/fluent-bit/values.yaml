@@ -58,8 +58,14 @@ parsers:
   ## Regex required fields are name and regex. JSON required field
   ## is name.
   regex: []
-  json: []
-
+  json: [
+      {
+        name: docker,
+        timeKeep: On,
+        timeKey: time,
+        decodeFieldAs: escaped, log
+      }
+  ]
 env: []
 
 ## Annotations to add to the DaemonSet's Pods
@@ -110,7 +116,7 @@ filter:
   kubeTag: kube
 # If true, check to see if the log field content is a JSON string map, if so,
 # it append the map fields as part of the log structure.
-#  mergeJSONLog: true
+  mergeJSONLog: true
 
 # If true, enable the use of monitoring for a pod annotation of
 # fluentbit.io/parser: parser_name. parser_name must be the name
