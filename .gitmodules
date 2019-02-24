@@ -1,0 +1,3 @@
+[submodule "k8s-logging/helm-charts"]
+	path = k8s-logging/helm-charts
+	url = https://github.com/elastic/helm-charts.git
