@@ -4,6 +4,30 @@
 2. Kibana
 
 
+Install ElasticSearch
+=====================
+1. ElasticSearch runs on the "infra" nodepool.
+   Add the following to values.yaml  in Kibana helm chart:
+   ...
+   nodeSelector:
+       role: infra
+   ...
+
+2. Run helm install dry run and validate the nodeSelector appears:
+   helm install --debug --dry-run --name elasticsearch --namespace=logging elasticsearch --version 6.5.4-alpha1 > /tmp/es2.yam
+
+   check /tmp/es2.yaml
+
+3. Run install:
+   helm install --name elasticsearch --namespace logging elasticsearch --version 6.5.4-alpha1
+
+4. Check that pods status is ok
+   kubectl get pods --namespace=logging -l app=elasticsearch-master -w
+
+5. Run helm installation test:
+   helm test elasticsearch
+
+
 
 Install Kibana
 =====================
@@ -15,9 +39,9 @@ Install Kibana
    ...
 
 2. Run helm install dry run and validate that nodeSelector is set
-  helm install --debug --dry-run --name kibana --namespace logging kibana --version 6.5.4-alpha1 > kibana.yaml
+  helm install --debug --dry-run --name kibana --namespace logging kibana --version 6.5.4-alpha1 > /tmp/kibana.yaml
 
-  check kibana.yaml
+  check /tmp/kibana.yaml
 
 3. Run `helm install`
    helm install --name kibana --namespace logging kibana --version 6.5.4-alpha1
