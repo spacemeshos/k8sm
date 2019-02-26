@@ -1,0 +1,61 @@
+
+
+1. Elasticsearch
+2. Kibana
+
+
+
+Install Kibana
+=====================
+1. Kibana runs on the "infra" nodepool.
+   Add the following to values.yaml  in Kibana helm chart:
+   ...
+   nodeSelector:
+       role: infra
+   ...
+
+2. Run helm install dry run and validate that nodeSelector is set
+  helm install --debug --dry-run --name kibana --namespace logging kibana --version 6.5.4-alpha1 > kibana.yaml
+
+  check kibana.yaml
+
+3. Run `helm install`
+   helm install --name kibana --namespace logging kibana --version 6.5.4-alpha1
+
+4. Replace Kibana service to run on NodePort rather than on ClusterIP
+   kubectl delete svc kibana-kibana -n logging
+   kubectl cretae -f kibana-service.yml -n logging   (kibana-service.yml in this repo)
+
+5. Install ingress controller for Kibana
+   helm install stable/nginx-ingress --namespace kube-system
+
+   verify external IP 
+   kubectl get svc -n kube-system
+
+   NAME                                        TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
+   winning-dog-nginx-ingress-controller        LoadBalancer   10.15.254.23    35.198.74.170   80:30655/TCP,443:30291/TCP   4h
+   winning-dog-nginx-ingress-default-backend   ClusterIP      10.15.243.5     <none>          80/TCP                       4h
+
+   In this stage, you should be able to connect to kibana through the external IP: http://35.198.74.170/
+
+6. make the ingress controller external IP be static in GCP
+   export IP_ADDRESS=35.198.74.170
+   gcloud compute addresses create kibana --addresses $IP_ADDRESS --region europe-west3
+
+7. Configure basic-auth
+   First, we need to create the htpasswd file for storing the usernames and passwords.
+   Create a Secret containing this file so the NGINX Ingress controller can use it.
+   run: 
+        htpasswd -bc auth ingress-user ingress-password
+
+   Create secret in kubernetes cluster:
+   kubectl create secret generic kibana-basic-auth --from-file=auth -n logging
+
+   Cretae ingress for kibana
+   kubectl create -f kibana-ingress-auth.yml -n logging
+
+   In this file you should set the host DNS.
+   the host DNS is an 'A' record in your domain points to the external IP create in section (5) above
+
+
+
