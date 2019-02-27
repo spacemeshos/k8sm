@@ -1,3 +1,6 @@
 [submodule "k8s-logging/helm-charts"]
 	path = k8s-logging/helm-charts
 	url = https://github.com/elastic/helm-charts.git
+[submodule "k8s-logging/fluentbit"]
+	path = k8s-logging/fluentbit
+	url = git@github.com:helm/charts.git
