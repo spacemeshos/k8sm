@@ -2,7 +2,7 @@
 
 1. Elasticsearch
 2. Kibana
-
+3. Fluent-bit
 
 Install ElasticSearch
 =====================
@@ -81,5 +81,7 @@ Install Kibana
    In this file you should set the host DNS.
    the host DNS is an 'A' record in your domain points to the external IP create in section (5) above
 
-
-
+Install Fluent-bit
+========================
+Run:
+helm install --name fluent-bit  --namespace logging fluent-bit
