@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: kibana-ingress
+  name: efk-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/auth-type: basic
@@ -16,3 +16,10 @@ spec:
         backend:
           serviceName: kibana-kibana
           servicePort: http
+  - host: es.spacemesh.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: elasticsearch-master
+          servicePort: 9200
