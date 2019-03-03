@@ -7,14 +7,14 @@
 Install ElasticSearch
 =====================
 1. ElasticSearch runs on the "infra" nodepool.
-   Add the following to values.yaml  in Kibana helm chart:
+   Add the following to values.yaml  in Elastic helm chart:
    ...
    nodeSelector:
        role: infra
    ...
 
 2. Run helm install dry run and validate the nodeSelector appears:
-   helm install --debug --dry-run --name elasticsearch --namespace=logging elasticsearch --version 6.5.4-alpha1 > /tmp/es2.yam
+   helm install --debug --dry-run --name elasticsearch --namespace=logging elasticsearch --version 6.5.4-alpha1 > /tmp/es2.yaml
 
    check /tmp/es2.yaml
 
@@ -27,7 +27,18 @@ Install ElasticSearch
 5. Run helm installation test:
    helm test elasticsearch
 
+6. If you wish to enable ingress to elasticsearch, the service should be "NodePort"
+   Add the following to elasticsearch/templates/service.yaml
 
+   ....
+   spec:
+     type: NodePort
+   selector:
+     .....
+   ....
+
+Run: helm upgrade elasticsearch --namespace=logging elasticsearch --version 6.5.4-alpha1
+Check Service type: kubectl get svc -n logging
 
 Install Kibana
 =====================
