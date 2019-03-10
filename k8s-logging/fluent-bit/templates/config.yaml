@@ -70,6 +70,7 @@ data:
         Logstash_Format On
         Retry_Limit False
         Type  {{ .Values.backend.es.type }}
+        Time_Key  @timestamp-es
 {{- if .Values.backend.es.logstash_prefix }}
         Logstash_Prefix {{ .Values.backend.es.logstash_prefix }}
 {{ else if .Values.backend.es.index }}
