@@ -57,7 +57,14 @@ parsers:
   ## List the respective parsers in key: value format per entry
   ## Regex required fields are name and regex. JSON required field
   ## is name.
-  regex: []
+
+  regex: [
+      {
+        name: panic,
+        regex: "*panic*",
+        timeKey: time
+      }
+  ]
   json: [
       {
         name: docker,
@@ -107,7 +114,7 @@ tolerations: []
 ## Node labels for fluent-bit pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
 ##
-nodeSelector: {}
+nodeSelector: {role: tests}
 
 filter:
   kubeURL: https://kubernetes.default.svc:443

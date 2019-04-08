@@ -34,6 +34,16 @@ data:
         DB.Sync          Normal
 {{- end }}
 
+    [INPUT]
+        Name              tail
+        Tag               panic.*
+        Path              /var/log/containers/*.log
+        Parser            panic
+        DB                /var/log/flb_kube1.db
+        Mem_Buf_Limit     5MB
+        Skip_Long_Lines   On
+        Refresh_Interval  3
+
     [FILTER]
         Name                kubernetes
         Match               {{ .Values.filter.kubeTag }}.*
@@ -41,7 +51,7 @@ data:
         Kube_CA_File        {{ .Values.filter.kubeCAFile }}
         Kube_Token_File     {{ .Values.filter.kubeTokenFile }}
 {{- if .Values.filter.mergeJSONLog }}
-        Merge_JSON_Log      On
+        Merge_log      On
 {{- end }}
 {{- if .Values.filter.enableParser }}
         K8S-Logging.Parser  On
@@ -50,6 +60,14 @@ data:
         K8S-Logging.Exclude On
 {{- end }}
 {{ if eq .Values.backend.type "test" }}
+
+    [FILTER]
+        Name                panicf
+        Match               panic.*
+        Kube_URL            https://kubernetes.default.svc.cluster.local:443
+        Merge_Log           Off
+        K8S-Logging.Parser  Off
+
     [OUTPUT]
         Name  file
         Match *
