@@ -24,7 +24,7 @@ backend:
     host: fluentd
     port: 24284
   es:
-    host:  elasticsearch-master
+    host:  elasticsearch-client
     port: 9200
     # Elastic Index Name
     index: kubernetes_cluster

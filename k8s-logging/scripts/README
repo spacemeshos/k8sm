@@ -1,0 +1,44 @@
+1. Elasticsearch
+2. Kibana
+3. Fluent-bit
+
+Install ElasticSearch
+=====================
+1. ElasticSearch runs on the "infra" nodepool.
+2. Run install:
+   helm install --name elasticsearch --namespace logging elasticsearch --version 6.5.4-alpha1
+
+Install Kibana
+=====================
+Run: ./deploy_kibana.sh
+
+Install Ingress Controller
+==========================
+1. helm install stable/nginx-ingress --namespace kube-system
+
+2. Find the ingress controller external IP:
+   Run: kubectl --namespace kube-system get services -o wide -w <NAME_OF_INGRESS_CONTROLLER>
+ 
+3. make the ingress controller external IP be static in GCP
+   export IP_ADDRESS=35.198.74.170
+   gcloud compute addresses create kibana --addresses $IP_ADDRESS --region europe-west3
+
+4. Configure basic-auth
+   First, we need to create the htpasswd file for storing the usernames and passwords.
+   Create a Secret containing this file so the NGINX Ingress controller can use it.
+   run:
+        htpasswd -bc auth ingress-user ingress-password
+
+   Create secret in kubernetes cluster:
+   kubectl create secret generic basic-auth --from-file=auth -n logging
+
+   Cretae ingress for kibana
+   kubectl create -f efk-ingress-auth.yml -n logging
+
+   In this file you should set the host DNS.
+   the host DNS is an 'A' record in your domain points to the external IP create in section (5) above
+
+Install Fluent-bit
+========================
+Run:
+helm install --name fluent-bit  --namespace logging fluent-bit
