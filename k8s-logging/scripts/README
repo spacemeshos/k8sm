@@ -1,12 +1,14 @@
 1. Elasticsearch
 2. Kibana
-3. Fluent-bit
+3. Install Ingress Controller
+4. Fluent-bit
+5. Prometheus
+6. Grafana
 
 Install ElasticSearch
 =====================
-1. ElasticSearch runs on the "infra" nodepool.
-2. Run install:
-   helm install --name elasticsearch --namespace logging elasticsearch --version 6.5.4-alpha1
+ElasticSearch runs on the "infra" nodepool.
+Run: ./deploy_elasticsearch.sh
 
 Install Kibana
 =====================
@@ -42,3 +44,22 @@ Install Fluent-bit
 ========================
 Run:
 helm install --name fluent-bit  --namespace logging fluent-bit
+
+Install Prometheus
+========================
+Run:
+./deploy_prometheus.sh
+
+
+Install Grafana
+========================
+1.Run:
+  ./deploy_grafana.sh
+
+2. Get the admin password:
+   kubectl get secret --namespace monitor grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+3. Change the password in the UI
+
+Install Ingress Controller - should be done for grafana and prometheus as well but with different auth type
+==========================
