@@ -1,0 +1,26 @@
+podTemplate(label: 'spacemesh-pod', containers: [
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'git', image: 'alpine/git', command: 'cat', ttyEnabled: true)
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  ]) 
+{
+  node('spacemesh-pod') {
+
+    stage('Install PoET Server') {
+        container('docker') {
+           sh """
+              docker pull ubuntu
+           """
+        }
+    }
+    stage('Run kubectl') {
+        container('kubectl') {
+           sh "kubectl get pods"
+           sh "kubectl create namespace longevity"
+        }
+    }
+  }
+}
