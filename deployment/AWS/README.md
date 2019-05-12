@@ -1,67 +1,41 @@
-# Create infra
+# k8s 4 Spacemesh
 
-## Quick Start / In a nutshell
+Mini Spacemesh testnet inside k8s
 
-All modules are desinged to be self contained you could basically do somthing like:
+## Prequisites
 
-```sh
-pushd $dir
-terraform init
-terraform plan -out `basename $PWD`.plan && \
-terraform apply `basename $PWD`.plan
-```
+- Terraform (setup eks + worker nodes + IAM roles etc)
+- AWS cli tools + a a valid IAM user with Admin privilidges (should be down-sacled once stabled)
+- kubectl - kubernetes cli tool
+- helm - kuberentes "package manager"
+- jq - json query tool very useful when managing clusters and working with `json` outputs
+- aws-iam-authenticator
 
-Which is basically what `terraform`'s life-cycle brings to the table.
-A more detailed expelnation is desined in steps 1,2 & 3 below:
+## deployment/terraform
 
-## Step 1 - Base Module
+See [deployment/README.md](deployment/README.md)
 
-**Module's Goals:** create state bucket and dynamoDB state table for terraform state management, history, lock (state locks), and audit.
+## k8s-apps
 
-**Module's Usage Frequency:** This module needs to run everytime you add a new IAM user to the "automation team", considering this module creates the state store for terraform to use later down the automation pipeline.
+This dir will include all the add-ons needed (this will probebly change in time):
 
-* In order to create a `state dynamoDB table` and `state bucket in s3` and allow certain iam users to access it we run the following:
+- 01.helm - Installation of helm (./install.sh doe sthe trick at the moment) 
+  see -> [k8s-apps/01.helm-install/README.md](k8s-apps/01.helm-install/README.md)
+- 02.efk - install elasticsearch operator and efk for logging stack
+-
+## spacemesh-apps [ WIP ]
 
-```sh
-export AWS_PROFILE=spacemesh
-cd ./deployment/terraform/base
-terraform init
-terraform plan -out `basename $PWD`.plan && \
-terraform apply `basename $PWD`.plan
-```
+Curentelly let's just launch an instance of spacemesh-go app
+Next steps:
 
-At this point you should have an `s3 bucket` `DynamoDB` table and permissions granted to the iam users you specify in the operators variable as an exmaple:
+- Define how to pass the instance token and ip to the rest of the nodes in the mesh (hint: probebly use init containers)
+- Build test scearios && configuration files to setup various testing scenarios.
 
-```json
-variable "operators" {
-  default = [
-     "automation",
-      ]
-}
-```
+## Quickstart
 
-*Please note:* for chicken egg reasons this "module's" state is stored in git ! (in order to create the s3 bucket for the state people usually do it manually ... :( which isn't elegant / reproducible and the state of the bucket is not managed ...)
-
-## STEP 2 - MAIN VPC & EKS
-
-**Module's Goals:** create the underlaying infrustructure for multipule kubernetes clusters in the same / differente regsions based on templating the best practices for `eks` to consume as variables.
-
-![static/aws-vpc.png](static/aws-vpc.png)
-
-**Module's Usage Frequency:** This module needs to run ->
-
-1. Everytime you change a VPC settings
-1. Add / remove gateways, routes, tags etc
-1. Change / Add security groups,
-1. Customize the IAM role of a certain group of nodes (so Kubernetes can do it's AWS related stuff ... like provision an ELB)
-
-```sh
-cd ../terraform/prd-eu
-terraform init -backend.config=backend.tfvars
-terraform plan -out `basename $PWD`.plan && \
-terraform apply `basename $PWD`.plan
-```
-
-*See!* - using the `backend.tfvars` which has the s3bucket & etc state information.
-
-A successful exacution of this module would result in an eks cluster in your newley created vpc.
+- Install perreqs
+- setup aws-cli (`aws configure --profile spacemesh`)
+- set your AWS profile:
+    ```sh
+    export AWS_PROFILE=spacemesh
+    ```
