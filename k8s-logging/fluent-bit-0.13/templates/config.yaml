@@ -85,6 +85,7 @@ data:
         Match *
         Host  {{ .Values.backend.es.host }}
         Port  {{ .Values.backend.es.port }}
+        Buffer_Size False
         Logstash_Format On
         Retry_Limit False
         Type  {{ .Values.backend.es.type }}
