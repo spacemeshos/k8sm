@@ -92,6 +92,8 @@ data:
         Port  {{ .Values.backend.es.port }}
         Logstash_Format On
         Retry_Limit False
+        Buffer_Size False
+        Generate_ID On
         Type  {{ .Values.backend.es.type }}
 {{- if .Values.backend.es.time_key }}
         Time_Key {{ .Values.backend.es.time_key }}

@@ -97,17 +97,17 @@ parsers:
   regex: [
       {
         name: panic,
-        regex: "*panic*",
+        regex: "panic*",
         timeKey: time
       }
   ]
   json: [
-      {
-        name: docker,
-        timeKeep: On,
-        timeKey: time,
-        decodeFieldAs: escaped, log
-      }
+      #{
+      #  name: docker,
+      #  timeKeep: On,
+      #  timeKey: time,
+      #  decodeFieldAs: escaped, log
+      #}
   ]
   #regex: []
   ##  json parser config can be defined by providing an extraEntries field.
