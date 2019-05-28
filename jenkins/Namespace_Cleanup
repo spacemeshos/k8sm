@@ -12,7 +12,8 @@ podTemplate(label: 'spacemesh-pod', containers: [
     stage('Clean old namespaces') {
         container('kubectl') {
            sh """
-              docker pull ubuntu
+              isaacns=`kubectl get namespaces  --no-headers=true -o wide | egrep -v '(default|logging|monitor|kube-public|kube-system)' | grep isaac | awk '{print $1}'`
+              kubectl delete namespace $isaacns
            """
         }
     }
