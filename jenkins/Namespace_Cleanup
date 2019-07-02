@@ -5,15 +5,16 @@ podTemplate(label: 'spacemesh-pod', containers: [
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  ]) 
+  ])
 {
   node('spacemesh-pod') {
-
     stage('Clean old namespaces') {
         container('kubectl') {
            sh """
-              isaacns=`kubectl get namespaces  --no-headers=true -o wide | egrep -v '(default|logging|monitor|kube-public|kube-system)' | grep isaac | awk '{print $1}'`
-              kubectl delete namespace $isaacns
+               ns=`kubectl get namespaces  --no-headers=true -o wide | egrep -v '(default|logging|monitor|kube-public|kube-system|kubernetes-plugin)' | awk '{print \$1}'`
+               if [ ! -z "\$ns" ]; then
+                   kubectl delete namespace \$ns
+               fi
            """
         }
     }
