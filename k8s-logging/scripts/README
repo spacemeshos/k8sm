@@ -1,9 +1,15 @@
+0. Add StorageClass SSD
 1. Elasticsearch
 2. Kibana
 3. Install Ingress Controller
 4. Fluent-bit
 5. Prometheus
 6. Grafana
+
+Add StorageClass SSD
+=====================
+Run:
+kubectl create -f storage_class_ssd.yaml
 
 Install ElasticSearch
 =====================

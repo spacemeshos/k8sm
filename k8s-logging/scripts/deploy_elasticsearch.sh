@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -x
-u output:
 RELEASE="elasticsearch"
 REPLICAS=3
 MIN_REPLICAS=2
@@ -13,9 +12,12 @@ helm install \
       --set master.podDisruptionBudget.minAvailable=${MIN_REPLICAS} \
       --set data.replicas=${REPLICAS} \
       --set data.nodeSelector.role="infra" \
-      --set data.resources.limits.cpu="2" \
-      --set data.persistence.size="50Gi" \
-      --set client.replicas="${MIN_REPLICAS}" \
+      --set data.resources.limits.cpu="4" \
+      --set data.additionalJavaOpts="-Xms4g -Xmx4g" \
+      --set data.persistence.storageClass="ssd" \
+      --set data.persistence.size="500Gi" \
+      --set client.replicas="${REPLICAS}" \
+      --set client.additionalJavaOpts="-Xms4g -Xmx4g" \
       --set client.resources.limits.cpu="2" \
       --set client.nodeSelector.role="infra" \
       --set client.serviceType="NodePort" \

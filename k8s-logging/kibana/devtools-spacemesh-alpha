@@ -1,0 +1,104 @@
+PUT /_settings
+{
+    "index" : {
+        "refresh_interval" : "5s"
+    }
+}
+
+PUT /_settings
+{
+    "index" : {
+        "number_of_replicas" : 0
+    }
+}
+
+
+POST kubernetes_cluster-2019.07.10/_refresh
+PUT _ingest/pipeline/ingest_timestamp_pipeline
+{
+  "description": "Adds a field to a document with the time of ingestion",
+  "processors": [
+    {
+      "set": {
+        "field": "ingest_timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+
+
+PUT kubernetes_cluster-2019.07.11/_settings
+{
+  "default_pipeline": "ingest_timestamp_pipeline"
+}
+
+
+PUT /_settings
+{
+    "index" : {
+        "translog" : {
+          "durability" : "async"
+        }
+    }
+}
+
+PUT /kubernetes_cluster-2019.07.11/_settings
+{
+    "index" : {
+        "refresh_interval" : "5s"
+    }
+}
+
+GET /kubernetes_cluster-2019.07.17/_settings
+
+GET /_settings
+
+GET /_ingest/pipeline
+
+PUT kubernetes_cluster-2019.07.11/_settings
+{
+    "index" : {
+        "translog" : {
+          "durability" : "async"
+        }
+    }
+}
+
+PUT _template/kubernetes_cluster_template
+{
+    "index_patterns" : [
+      "kubernetes_cluster-*"
+    ],
+    "settings" : {
+      "index" : {
+          "refresh_interval" : "5s",
+          "number_of_replicas" : 0,
+          "default_pipeline": "ingest_timestamp_pipeline",
+          "translog" : {
+            "durability" : "async"
+          },
+          "lifecycle" : {
+            "name" : "index_delete",
+            "rollover_alias" : ""
+          }
+      }
+    }
+}
+
+GET _template/kubernetes_cluster_template
+
+GET .kibana/_search
+{
+  "_source": ["index-pattern.title"],
+  "query": {
+    "term": {
+      "type": "index-pattern"
+    }
+  }
+}
+
+PUT /_settings
+{
+  "index.blocks.read_only_allow_delete": null
+}
