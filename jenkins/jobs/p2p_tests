@@ -1,0 +1,24 @@
+def label = "spacemesh-pod-${UUID.randomUUID().toString()}"
+podTemplate(label: label, containers: [
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'git', image: 'alpine/git', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'python', image: 'spacemeshos/go-spacemesh-python:main', command: 'cat', alwaysPullImage: true, ttyEnabled: true)
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  ])
+{
+  node(label) {
+    withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET')]) { //set SECRET with the credential content
+        stage('Run pytest') {
+            container('python') {
+               sh """
+                  export ES_PASSWD="${SECRET}"
+                  pytest -s -v /tests/p2p/test_p2p.py::test_client --tc-file=/tests/p2p/config.yaml --tc-format=yaml
+               """
+            }
+        }
+    }
+  }
+}
