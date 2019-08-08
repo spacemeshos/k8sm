@@ -13,10 +13,23 @@ podTemplate(label: label, containers: [
     withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET')]) { //set SECRET with the credential content
         stage('Run pytest') {
             container('python') {
-               sh """
-                  export ES_PASSWD="${SECRET}"
-                  pytest -s -v /tests/p2p/test_p2p.py::test_client --tc-file=/tests/p2p/config.yaml --tc-format=yaml
-               """
+               script {
+                    if ("${TESTS}" == 'All') {
+                        sh """
+                            echo "Run All tests"
+                            export ES_PASSWD="${SECRET}"
+                            pytest -s -v /tests/p2p/test_p2p.py --tc-file=/tests/p2p/config.yaml --tc-format=yaml
+                        """
+                    }
+                    else {
+                        sh """
+                            echo "Run test: ${TESTS}"
+                            export ES_PASSWD="${SECRET}"
+                            export PYTHONUNBUFFERED=1
+                            pytest -s -v /tests/p2p/test_p2p.py::"${TESTS}" --tc-file=/tests/p2p/config.yaml --tc-format=yaml
+                        """
+                    }
+               }
             }
         }
     }
