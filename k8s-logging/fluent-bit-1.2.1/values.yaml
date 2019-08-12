@@ -43,12 +43,12 @@ trackOffsets: false
 priorityClassName: ""
 
 backend:
-  type: es
+  type: forward
   forward:
     host: fluentd
-    port: 24284
+    port: 24224
     tls: "off"
-    tls_verify: "on"
+    tls_verify: "off"
     tls_debug: 1
     shared_key:
   es:
@@ -218,13 +218,13 @@ affinity: {}
 
 service:
   flush: 1
-  logLevel: info
+  logLevel: debug
 
 input:
   tail:
     memBufLimit: 5MB
     parser: docker
-    path: /var/log/containers/*.log
+    path: /var/log/containers/sm-*.log
   systemd:
     enabled: false
     filters:
