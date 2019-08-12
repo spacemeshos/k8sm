@@ -1,0 +1,114 @@
+replicaCount: 3
+affinity: {}
+annotations: {}
+configMaps:
+  forward-input.conf: |
+    <source>
+      @type forward
+      port 24224
+      bind 0.0.0.0
+    </source>
+  general.conf: |
+    # Prevent fluentd from handling records containing its own logs. Otherwise
+    # it can lead to an infinite loop, when error in sending one message generates
+    # another message which also fails to be sent and so on.
+    <match fluentd.**>
+      @type null
+    </match>
+
+    # Used for health checking
+    <source>
+      @type http
+      port 9880
+      bind 0.0.0.0
+    </source>
+
+    # Emits internal metrics to every minute, and also exposes them on port
+    # 24220. Useful for determining if an output plugin is retryring/erroring,
+    # or determining the buffer queue length.
+    <source>
+      @type monitor_agent
+      bind 0.0.0.0
+      port 24220
+      tag fluentd.monitor.metrics
+    </source>
+  output.conf: |
+    <match **>
+      @id elasticsearch
+      @type elasticsearch
+      @log_level debug
+      include_tag_key true
+      # Replace with the host/port to your Elasticsearch cluster.
+      #host "#{ENV['OUTPUT_HOST']}"
+      #port "#{ENV['OUTPUT_PORT']}"
+      host elasticsearch-client
+      port 9200
+      #index_name kubernetes_cluster
+      scheme "#{ENV['OUTPUT_SCHEME']}"
+      ssl_version "#{ENV['OUTPUT_SSL_VERSION']}"
+      logstash_format true
+      logstash_prefix kubernetes_cluster
+      <buffer>
+        @type file
+        path /var/log/fluentd-buffers/kubernetes.system.buffer
+        flush_mode interval
+        retry_type exponential_backoff
+        flush_thread_count 8
+        flush_interval 1s
+        retry_forever
+        retry_max_interval 30
+        #chunk_limit_size "#{ENV['OUTPUT_BUFFER_CHUNK_LIMIT']}"
+        chunk_limit_size 16m
+        queue_limit_length "#{ENV['OUTPUT_BUFFER_QUEUE_LIMIT']}"
+        overflow_action block
+      </buffer>
+    </match>
+  system.conf: |-
+    <system>
+      root_dir /tmp/fluentd-buffers/
+    </system>
+env: {}
+extraEnvVars: null
+image:
+  pullPolicy: IfNotPresent
+  repository: gcr.io/google-containers/fluentd-elasticsearch
+  tag: v2.4.0
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  enabled: false
+  hosts: null
+  labels: []
+  tls: {}
+metrics:
+  enabled: false
+  service:
+    port: 24231
+  serviceMonitor:
+    additionalLabels: {}
+    enabled: false
+nodeSelector:
+  role: infra
+output:
+  buffer_chunk_limit: 2M
+  buffer_queue_limit: 8
+  host: elasticsearch-client
+  port: 9200
+  scheme: http
+  sslVersion: TLSv1
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  size: 10Gi
+resources: {}
+service:
+  ports:
+  - containerPort: 24220
+    name: monitor-agent
+    protocol: TCP
+  - containerPort: 24224
+    name: input-frwd
+    protocol: TCP
+  type: ClusterIP
+tolerations: []
+

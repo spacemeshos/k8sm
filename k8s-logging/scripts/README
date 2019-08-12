@@ -51,6 +51,12 @@ Install Fluent-bit
 Run:
 helm install --name fluent-bit  --namespace logging fluent-bit
 
+
+Install FluentD
+========================
+helm install --name fluentd --namespace logging  -f fluentd.yml stable/fluentd
+
+
 Install Prometheus
 ========================
 Run:
