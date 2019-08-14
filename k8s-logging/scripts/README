@@ -3,8 +3,9 @@
 2. Kibana
 3. Install Ingress Controller
 4. Fluent-bit
-5. Prometheus
-6. Grafana
+5. FluentD
+6. Prometheus
+7. Grafana
 
 Add StorageClass SSD
 =====================
@@ -54,7 +55,7 @@ helm install --name fluent-bit  --namespace logging fluent-bit
 
 Install FluentD
 ========================
-helm install --name fluentd --namespace logging  -f fluentd.yml stable/fluentd
+helm install --name fluentd --namespace logging  -f fluentd-values.yml stable/fluentd
 
 
 Install Prometheus
