@@ -12,10 +12,6 @@ pipeline {
         container('python') {
           sh """
               python --version
-              #export ES_PASSWD="${SECRET}"
-              #export PYTHONUNBUFFERED=1
-              #export PYTHONPATH="${WORKSPACE}"
-              #python ./tests/monitoring/atx_published.py "${NAMESPACE}" 100
           """
         }
       }
