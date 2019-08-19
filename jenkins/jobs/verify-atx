@@ -34,10 +34,13 @@ pipeline {
   }
   post {
     failure {
+      script {
+        BUILD_USER = getBuildUser()
+      }
       echo "Sending message to Slack"
       slackSend (color: "${env.SLACK_COLOR_DANGER}",
                  channel: '#jenkins_notify',
-                 message: "*FAILED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+                 message: "*FAILED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}")
     } // failure
   }
 }
