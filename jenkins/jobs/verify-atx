@@ -5,6 +5,7 @@ pipeline {
       yamlFile 'jenkins/jobs/KubernetesPod.yaml'
     }
   }
+  options { timestamps () }
   environment {
     SECRET = credentials('ES_PASSWD')
   }
