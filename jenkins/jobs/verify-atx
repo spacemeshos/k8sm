@@ -1,0 +1,25 @@
+pipeline {
+  agent {
+    kubernetes {
+      label 'spacemesh-pod'
+      yamlFile 'jenkins/jobs/KubernetesPod.yaml'
+    }
+  }
+  stages {
+    stage('Verify publish atx') {
+      steps {
+        git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
+        container('python') {
+          sh """
+              python --version
+              #export ES_PASSWD="${SECRET}"
+              #export PYTHONUNBUFFERED=1
+              #export PYTHONPATH="${WORKSPACE}"
+              #python ./tests/monitoring/atx_published.py "${NAMESPACE}" 100
+          """
+        }
+      }
+    }
+  }
+}
+
