@@ -4,8 +4,21 @@ metadata:
   name: spacemesh-pod
 spec:
   containers:
+  - name: docker
+    image: docker:17.03
+    imagePullPolicy: IfNotPresent
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+      - name: docker
+        mountPath: /var/run/docker.sock
   - name: python
     image: spacemeshos/go-spacemesh-python:main
     command:
     - cat
     tty: true
+  volumes:
+  - name: docker
+    hostPath:
+      path: /var/run/docker.sock
