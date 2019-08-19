@@ -13,6 +13,13 @@ pipeline {
         }
       }
     }
+    stage('Run kubectl') {
+      steps {
+        container('kubectl') {
+          sh 'kubectl get namespaces'
+        }
+      }
+    }
   }
 }
 

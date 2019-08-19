@@ -13,6 +13,11 @@ spec:
     volumeMounts:
       - name: docker
         mountPath: /var/run/docker.sock
+  - name: kubectl
+    image: lachlanevenson/k8s-kubectl:v1.8.0
+    command:
+    - cat
+    tty: true
   - name: python
     image: spacemeshos/go-spacemesh-python:main
     command:
