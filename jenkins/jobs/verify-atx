@@ -13,6 +13,8 @@ pipeline {
   options { timestamps () }
   environment {
     SECRET = credentials('ES_PASSWD')
+    // Slack configuration
+    SLACK_COLOR_DANGER  = '#E01563'
   }
   stages {
     stage('Verify publish atx') {
@@ -30,14 +32,12 @@ pipeline {
     }
   }
   post {
-    always {
-      script {
-        BUILD_USER = getBuildUser()
-      }      
-      slackSend channel: '#jenkins_notify',
-        color: COLOR_MAP[currentBuild.currentResult],
-        message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}"    
-    }
+    failure {
+      echo "Sending message to Slack"
+      slackSend (color: "${env.SLACK_COLOR_DANGER}",
+                 channel: '#jenkins_notify',
+                 message: "*FAILED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+    } // failure
   }
 }
 
