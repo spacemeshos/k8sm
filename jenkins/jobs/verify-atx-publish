@@ -1,0 +1,28 @@
+podTemplate(label: 'spacemesh-pod', containers: [
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'git', image: 'alpine/git', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'python', image: 'spacemeshos/go-spacemesh-python:main', command: 'cat', alwaysPullImage: true, ttyEnabled: true)
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  ])
+{
+  timestamps {
+        node('spacemesh-pod') {
+            withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET')]) { //set SECRET with the credential content
+                stage('Verify publish atx') {
+                    git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
+                    container('python') {
+                       sh """
+                           export ES_PASSWD="${SECRET}"
+                           export PYTHONUNBUFFERED=1
+                           export PYTHONPATH="${WORKSPACE}"
+                           python ./tests/monitoring/atx_published.py "${NAMESPACE}" 100
+                       """
+                    }
+                }
+            }
+        }
+    }
+}
