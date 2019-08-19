@@ -1,0 +1,17 @@
+pipeline {
+  agent {
+    kubernetes {
+      yamlFile 'KubernetesPod.yaml'
+    }
+  }
+  stages {
+    stage('Run python') {
+      steps {
+        container('python') {
+          sh 'python --version'
+        }
+      }
+    }
+  }
+}
+

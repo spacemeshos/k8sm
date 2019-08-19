@@ -1,0 +1,10 @@
+metadata:
+  labels:
+    label: spacemesh-pod
+spec:
+  containers:
+  - name: python
+    image: spacemeshos/go-spacemesh-python:main
+    command:
+    - cat
+    tty: true
