@@ -18,6 +18,11 @@ spec:
     command:
     - cat
     tty: true
+  - name: git
+    image: alpine/git
+    command:
+    - cat
+    tty: true
   - name: python
     image: spacemeshos/go-spacemesh-python:main
     command:

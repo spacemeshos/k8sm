@@ -20,6 +20,13 @@ pipeline {
         }
       }
     }
+    stage('Run git') {
+      steps {
+        container('git') {
+          sh 'git remote -v'
+        }
+      }
+    }
   }
 }
 
