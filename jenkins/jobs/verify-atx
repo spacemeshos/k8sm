@@ -26,7 +26,6 @@ pipeline {
               export PYTHONUNBUFFERED=1
               export PYTHONPATH="${WORKSPACE}"
               python ./tests/monitoring/atx_published.py "${NAMESPACE}" 100
-              exit 1
           """
         }
       }
