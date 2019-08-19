@@ -1,6 +1,7 @@
 pipeline {
   agent {
     kubernetes {
+      label 'spacemesh-pod'
       yamlFile 'jenkins/jobs/KubernetesPod.yaml'
     }
   }

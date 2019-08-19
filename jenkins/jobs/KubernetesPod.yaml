@@ -1,6 +1,7 @@
+apiVersion: v1
+kind: Pod
 metadata:
-  labels:
-    label: spacemesh-pod
+  name: spacemesh-pod
 spec:
   containers:
   - name: python
