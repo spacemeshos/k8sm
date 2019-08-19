@@ -5,12 +5,16 @@ pipeline {
       yamlFile 'jenkins/jobs/KubernetesPod.yaml'
     }
   }
+  environemnt {
+    SECRET = credentials('ES_PASSWD')
+  }
   stages {
     stage('Verify publish atx') {
       steps {
         git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
         container('python') {
           sh """
+              export ES_PASSWD=${env.SECRET}
               python --version
           """
         }
