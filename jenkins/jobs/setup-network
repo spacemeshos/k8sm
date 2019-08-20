@@ -1,0 +1,25 @@
+pipeline {
+  agent {
+    kubernetes {
+      label 'spacemesh-pod'
+      yamlFile 'jenkins/jobs/KubernetesPod.yaml'
+    }
+  }
+  options { timestamps () }
+  stages {
+    stage('Setup Spacemesh Network') {
+      steps {
+        git branch: "develop", url: 'https://github.com/spacemeshos/go-spacemesh.git'
+        container('python') {
+          sh """
+              export ES_PASSWD=${env.SECRET}
+              export PYTHONUNBUFFERED=1
+              export PYTHONPATH="${WORKSPACE}"
+              python ./tests/longevity/test_mesh.py::test_mesh -s -v --tc-file=longevity/config.yaml --tc-format=yaml 
+          """
+        }
+      }
+    }
+  }
+}
+
