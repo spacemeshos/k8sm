@@ -15,7 +15,8 @@ pipeline {
               export ES_PASSWD=${env.SECRET}
               export PYTHONUNBUFFERED=1
               export PYTHONPATH="${WORKSPACE}"
-              python ./tests/longevity/test_mesh.py::test_mesh -s -v --tc-file=longevity/config.yaml --tc-format=yaml 
+              cd go-spacemesh/tests
+              pytest longevity/test_mesh.py::test_mesh -s -v --tc-file=longevity/config.yaml --tc-format=yaml 
           """
         }
       }
