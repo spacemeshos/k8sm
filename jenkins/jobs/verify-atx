@@ -34,7 +34,11 @@ pipeline {
   post {
     failure {
       script {
-        BUILD_USER = getBuildUser()
+        try {
+          BUILD_USER = getBuildUser()
+        } catch (Exception e) {
+          BUILD_USER = ""
+        }
       }
       echo "Sending message to Slack"
       slackSend (color: "${env.SLACK_COLOR_DANGER}",
