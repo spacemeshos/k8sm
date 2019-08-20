@@ -16,6 +16,7 @@ pipeline {
               export PYTHONUNBUFFERED=1
               export PYTHONPATH="${WORKSPACE}/tests"
               ls -la
+              cd tests
               pytest longevity/test_mesh.py::test_mesh -s -v --tc-file=longevity/config.yaml --tc-format=yaml
           """
         }
