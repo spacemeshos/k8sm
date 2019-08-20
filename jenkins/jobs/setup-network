@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Setup Spacemesh Network') {
       steps {
-        git branch: "develop", url: 'https://github.com/spacemeshos/go-spacemesh.git'
+        git branch: "${TESTS_BRANCH}", url: 'https://github.com/spacemeshos/go-spacemesh.git'
         container('python') {
           sh """
               export ES_PASSWD=${env.SECRET}
