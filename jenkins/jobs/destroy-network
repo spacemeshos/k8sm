@@ -1,0 +1,21 @@
+pipeline {
+  agent {
+    kubernetes {
+      label 'spacemesh-pod'
+      yamlFile 'jenkins/jobs/KubernetesPod.yaml'
+    }
+  }
+  options { timestamps () }
+  stages {
+    stage('Setup Spacemesh Network') {
+      steps {
+        container('kubectl') {
+          sh """
+              kubectl get namespaces
+          """
+        }
+      }
+    }
+  }
+}
+
