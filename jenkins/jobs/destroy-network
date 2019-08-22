@@ -11,7 +11,8 @@ pipeline {
       steps {
         container('kubectl') {
           sh """
-              kubectl get namespaces
+              echo "Going to delete namespace: ${NAMESPACE}"
+              kubectl delete namespace "${NAMESPACE}"
           """
         }
       }
