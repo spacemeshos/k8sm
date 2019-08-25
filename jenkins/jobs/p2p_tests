@@ -11,7 +11,7 @@ podTemplate(label: label, containers: [
 {
   node(label) {
     withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET'),  //set SECRET with the credential conten
-                     file(credentialsId: 'config', variable: 'KUBE_CONF')]) {
+                     file(credentialsId: 'kubeconfig', variable: 'KUBE_CONF')]) {
         stage('Run pytest') {
             git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
             container('python') {
