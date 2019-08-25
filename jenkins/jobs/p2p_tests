@@ -13,7 +13,7 @@ podTemplate(label: label, containers: [
     withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET')]) {
         stage('Run pytest') {
             git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
-            configFileProvider([configFile(fileId: kubeconfig, variable: 'KUBE_CONF')]) { 
+            configFileProvider([configFile(fileId: 'kubeconfig', variable: 'KUBE_CONF')]) { 
                 container('python') {
                     script {
                         sh """
