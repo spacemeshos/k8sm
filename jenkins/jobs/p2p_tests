@@ -17,8 +17,8 @@ podTemplate(label: label, containers: [
                 container('python') {
                     script {
                         sh """
-                            mkdir -p .kube && touch .kube/config
-                            cat ${KUBE_CONF} > ${WORKSPACE}/.kube/config
+                            mkdir -p .kube
+                            cp ${KUBE_CONF} ${WORKSPACE}/.kube/config
                         """
                         if ("${TESTS}" == 'All') {
                             sh """
