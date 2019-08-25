@@ -15,6 +15,7 @@ pipeline {
               export ES_PASSWD=${env.SECRET}
               export PYTHONUNBUFFERED=1
               export PYTHONPATH="${WORKSPACE}/tests"
+              export KUBECONTEXT=${CONTEXT}
               ls -la
               cd tests
               echo "${CONFIG}" > longevity/config.yaml
