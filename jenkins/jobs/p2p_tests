@@ -10,30 +10,31 @@ podTemplate(label: label, containers: [
   ])
 {
   node(label) {
-    withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET'),  //set SECRET with the credential conten
-                     file(credentialsId: 'kubeconfig', variable: 'KUBE_CONF')]) {
+    withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET')]) {
         stage('Run pytest') {
             git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
-            container('python') {
-                script {
-                    sh """
-                        mkdir -p .kube && touch .kube/config
-                        cat ${KUBE_CONF} > ${WORKSPACE}/.kube/config
-                    """
-                    if ("${TESTS}" == 'All') {
+            configFileProvider([configFile(fileId: kubeconfig, variable: 'KUBE_CONF')]) { 
+                container('python') {
+                    script {
                         sh """
-                            echo "Run All tests"
-                            export ES_PASSWD="${SECRET}"
-                            pytest -s -v ./tests/p2p/test_p2p.py --tc-file=./tests/p2p/config.yaml --tc-format=yaml
+                            mkdir -p .kube && touch .kube/config
+                            cat ${KUBE_CONF} > ${WORKSPACE}/.kube/config
                         """
-                    }
-                    else {
-                        sh """
-                            echo "Run test: ${TESTS}"
-                            export ES_PASSWD="${SECRET}"
-                            export PYTHONUNBUFFERED=1
-                            pytest -s -v ./tests/p2p/test_p2p.py::"${TESTS}" --tc-file=./tests/p2p/config.yaml --tc-format=yaml
-                        """
+                        if ("${TESTS}" == 'All') {
+                            sh """
+                                echo "Run All tests"
+                                export ES_PASSWD="${SECRET}"
+                                pytest -s -v ./tests/p2p/test_p2p.py --tc-file=./tests/p2p/config.yaml --tc-format=yaml
+                            """
+                        }
+                        else {
+                            sh """
+                                echo "Run test: ${TESTS}"
+                                export ES_PASSWD="${SECRET}"
+                                export PYTHONUNBUFFERED=1
+                                pytest -s -v ./tests/p2p/test_p2p.py::"${TESTS}" --tc-file=./tests/p2p/config.yaml --tc-format=yaml
+                            """
+                        }
                     }
                 }
             }
