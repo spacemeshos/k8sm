@@ -17,7 +17,7 @@ podTemplate(label: label, containers: [
                 container('python') {
                     script {
                         sh """
-                            mkdir -p .kube
+                            mkdir -p ~/.kube
                             cp ${KUBE_CONF} ~/.kube/config
                         """
                         if ("${TESTS}" == 'All') {
