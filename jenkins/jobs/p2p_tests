@@ -28,7 +28,7 @@ podTemplate(label: label, containers: [
                             sh """
                                 echo "Run All tests"
                                 export ES_PASSWD="${SECRET}"
-                                export GOOGLE_APPLICATION_CREDENTIALS='~/.kube/google_application_cred'
+                                export GOOGLE_APPLICATION_CREDENTIALS='/tests/google_application_cred'
                                 pytest -s -v ./tests/p2p/test_p2p.py --tc-file=./tests/p2p/config.yaml --tc-format=yaml
                             """
                         }
