@@ -19,8 +19,8 @@ podTemplate(label: label, containers: [
                     script {
                         sh """
                             mkdir -p ~/.kube
-                            cp ${GOOGLE_CRED} ~/google_application_cred
-                            /usr/local/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ~/google_application_cred
+                            cp ${GOOGLE_CRED} /tests/google_application_cred
+                            /usr/local/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /tests/google_application_cred
                             /usr/local/gcloud/google-cloud-sdk/bin/gcloud container clusters get-credentials spacemesh-lab1 --zone us-east1-b --project spacemesh-198810
                         """
                         if ("${TESTS}" == 'All') {
