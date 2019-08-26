@@ -3,7 +3,7 @@ podTemplate(label: label, containers: [
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'git', image: 'alpine/git', command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'python', image: 'spacemeshos/go-spacemesh-python:l8', command: 'cat', alwaysPullImage: true, ttyEnabled: true)
+    containerTemplate(name: 'python', image: 'spacemeshos/go-spacemesh-python:l10', command: 'cat', alwaysPullImage: true, ttyEnabled: true)
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -13,17 +13,20 @@ podTemplate(label: label, containers: [
     withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET')]) {
         stage('Run pytest') {
             git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
-            configFileProvider([configFile(fileId: 'kubeconfig', variable: 'KUBE_CONF')]) { 
+            configFileProvider([configFile(fileId: 'kubeconfig', variable: 'KUBE_CONF'),
+                                configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) { 
                 container('python') {
                     script {
                         sh """
                             mkdir -p ~/.kube
                             cp ${KUBE_CONF} ~/.kube/config
+                            cp ${GOOGLE_CRED} ~/.kube/google_application_cred
                         """
                         if ("${TESTS}" == 'All') {
                             sh """
                                 echo "Run All tests"
                                 export ES_PASSWD="${SECRET}"
+                                export GOOGLE_APPLICATION_CREDENTIALS='~/.kube/google_application_cred'
                                 pytest -s -v ./tests/p2p/test_p2p.py --tc-file=./tests/p2p/config.yaml --tc-format=yaml
                             """
                         }
