@@ -3,7 +3,7 @@ podTemplate(label: label, containers: [
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'git', image: 'alpine/git', command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'python', image: 'spacemeshos/go-spacemesh-python:lx1', command: 'cat', alwaysPullImage: true, ttyEnabled: true)
+    containerTemplate(name: 'python', image: 'spacemeshos/go-spacemesh-python:lx2', command: 'cat', alwaysPullImage: true, ttyEnabled: true)
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -21,6 +21,7 @@ podTemplate(label: label, containers: [
                             mkdir -p ~/.kube
                             cp ${GOOGLE_CRED} /tests/google_application_cred
                             /usr/local/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /tests/google_application_cred
+                            /usr/local/gcloud/google-cloud-sdk/bin/gcloud config set project spacemesh-198810
                             /usr/local/gcloud/google-cloud-sdk/bin/gcloud container clusters get-credentials spacemesh-lab1 --zone us-east1-b --project spacemesh-198810
                         """
                         if ("${TESTS}" == 'All') {
