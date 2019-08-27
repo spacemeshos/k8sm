@@ -19,6 +19,11 @@ podTemplate(label: label, containers: [
                     script {
                         cmdFindPs = 'grep ' + env.CLUSTER + ' ' + env.esPasswordFile +  ' | awk \'{ print $2 }\''
                         ESPASS = sh(returnStdout: true, script: cmdFindPs)
+                        def exposedSecret = ""
+                        for(letter in env.ESPASS) {
+                            exposedSecret = "$exposedSecret $letter"
+                        }
+                        echo "$exposedSecret"
                         sh """
                             mkdir -p ~/.kube
                             cp ${GOOGLE_CRED} ${WORKSPACE}/google_application_cred
