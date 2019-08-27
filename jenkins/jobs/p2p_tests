@@ -50,5 +50,6 @@ podTemplate(label: label, containers: [
             }
         }
     }
+    echo "echo step (out of block) - vars: ${ESPASS} - ${esPasswordFile}"
   }
 }
