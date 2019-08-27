@@ -36,7 +36,7 @@ podTemplate(label: label, containers: [
                         else {
                             sh """
                                 echo "Run test: ${TESTS}"
-                                export ES_PASSWD=`cat ${esPasswordFile} | grep ${CLUSTER} | awk '{ print $2 }'`
+                                export ES_PASSWD=`grep ${CLUSTER} ${esPasswordFile} | awk '{ print $2 }'`
                                 export PYTHONUNBUFFERED=1
                                 export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/google_application_cred'
                                 pytest -s -v ./tests/p2p/test_p2p.py::"${TESTS}" --tc-file=./tests/p2p/config.yaml --tc-format=yaml
