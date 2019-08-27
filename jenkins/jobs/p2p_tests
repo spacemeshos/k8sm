@@ -17,7 +17,8 @@ podTemplate(label: label, containers: [
             configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) { 
                 container('python') {
                     script {
-                        ESPASS = sh(returnStdout: true, script: 'grep ${CLUSTER} ${esPasswordFile} | awk "{ print $2 }"')
+                        cmdFindPs = 'grep ' + env.CLUSTER + ' ' + env.esPasswordFile +  ' | awk \'{ print $2 }\''
+                        ESPASS = sh(returnStdout: true, script: cmdFindPs)
                         sh """
                             mkdir -p ~/.kube
                             cp ${GOOGLE_CRED} ${WORKSPACE}/google_application_cred
