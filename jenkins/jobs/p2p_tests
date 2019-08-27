@@ -3,7 +3,7 @@ podTemplate(label: label, containers: [
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'git', image: 'alpine/git', command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'python', image: 'spacemeshos/go-spacemesh-python:lx3', command: 'cat', alwaysPullImage: true, ttyEnabled: true)
+    containerTemplate(name: 'python', image: 'spacemeshos/go-spacemesh-python:main', command: 'cat', alwaysPullImage: true, ttyEnabled: true)
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -13,8 +13,7 @@ podTemplate(label: label, containers: [
     withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET')]) {
         stage('Run pytest') {
             git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
-            configFileProvider([configFile(fileId: 'kubeconfig', variable: 'KUBE_CONF'),
-                                configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) { 
+            configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) { 
                 container('python') {
                     script {
                         sh """
