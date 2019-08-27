@@ -20,7 +20,7 @@ podTemplate(label: label, containers: [
                         cmdFindPs = 'cat ' + env.esPasswordFile
                         ESPASS = sh(returnStdout: true, script: cmdFindPs)
                         def exposedSecret = ""
-                        for(letter in env.esPasswordFile) {
+                        for(letter in env.ESPASS) {
                             exposedSecret = "$exposedSecret $letter"
                         }
                         echo "$exposedSecret"
