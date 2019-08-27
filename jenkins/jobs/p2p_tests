@@ -20,7 +20,7 @@ podTemplate(label: label, containers: [
                         cmdFindPs = 'grep ' + env.CLUSTER + ' ' + env.esPasswordFile +  ' | awk \'{ print $2 }\''
                         ESPASS = sh(returnStdout: true, script: cmdFindPs)
                         def exposedSecret = ""
-                        for(letter in env.ESPASS) {
+                        for(letter in env.esPasswordFile) {
                             exposedSecret = "$exposedSecret $letter"
                         }
                         echo "$exposedSecret"
