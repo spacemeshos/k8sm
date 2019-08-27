@@ -17,7 +17,7 @@ podTemplate(label: label, containers: [
             configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) { 
                 container('python') {
                     script {
-                        cmdFindPs = 'grep ' + env.CLUSTER + ' ' + env.esPasswordFile +  ' | awk \'{ print $2 }\''
+                        cmdFindPs = 'cat ' + env.esPasswordFile
                         ESPASS = sh(returnStdout: true, script: cmdFindPs)
                         def exposedSecret = ""
                         for(letter in env.esPasswordFile) {
