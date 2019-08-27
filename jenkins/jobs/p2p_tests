@@ -11,13 +11,13 @@ podTemplate(label: label, containers: [
 {
   node(label) {
     withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET'),
-                     string(credentialsId: 'ES_PASSWD_FILE', variable: 'esPasswordFile')]) {
+                     file(credentialsId: 'ES_PASSWD_FILE', variable: 'esPasswordFile')]) {
         stage('Run pytest') {
             git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
             configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) { 
                 container('python') {
                     script {
-                        cmdFindPs = 'echo ' + env.esPasswordFile + ' | grep ' + env.CLUSTER + ' | awk \'{ print $2 }\''
+                        cmdFindPs = 'grep ' + env.CLUSTER + ' ' + env.esPasswordFile +  ' | awk \'{ print $2 }\''
                         ESPASS = sh(returnStdout: true, script: cmdFindPs)
                         sh """
                             mkdir -p ~/.kube
