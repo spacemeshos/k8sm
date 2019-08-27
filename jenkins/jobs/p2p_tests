@@ -20,16 +20,16 @@ podTemplate(label: label, containers: [
                         sh """
                             mkdir -p ~/.kube
                             cp ${GOOGLE_CRED} ${WORKSPACE}/google_application_cred
-                            /usr/local/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${WORKSPACE}/google_application_cred
-                            /usr/local/gcloud/google-cloud-sdk/bin/gcloud config set project spacemesh-198810
-                            /usr/local/gcloud/google-cloud-sdk/bin/gcloud container clusters get-credentials spacemesh-lab1 --zone us-east1-b --project spacemesh-198810
+                            sudo /usr/local/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${WORKSPACE}/google_application_cred
+                            sudo /usr/local/gcloud/google-cloud-sdk/bin/gcloud config set project spacemesh-198810
+                            sudo /usr/local/gcloud/google-cloud-sdk/bin/gcloud container clusters get-credentials spacemesh-lab1 --zone us-east1-b --project spacemesh-198810
                             sleep 3000
                         """
                         if ("${TESTS}" == 'All') {
                             sh """
                                 echo "Run All tests"
                                 export ES_PASSWD="${SECRET}"
-                                export GOOGLE_APPLICATION_CREDENTIALS='/tests/google_application_cred'
+                                export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/tests/google_application_cred'
                                 pytest -s -v ./tests/p2p/test_p2p.py --tc-file=./tests/p2p/config.yaml --tc-format=yaml
                             """
                         }
