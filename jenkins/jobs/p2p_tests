@@ -12,7 +12,7 @@ pipeline {
     }
     options { timestamps () }
     environment {
-      SECRET = credentials('ES_PASSWD')
+      ESPASS = credentials("${CLUSTER}")
       // Slack configuration
       SLACK_COLOR_DANGER  = '#E01563'
     }
