@@ -1,0 +1,74 @@
+def COLOR_MAP = ['SUCCESS': 'good', 'FAILURE': 'danger', 'UNSTABLE': 'danger', 'ABORTED': 'danger']
+def getBuildUser() {
+    return currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId()
+}
+
+pipeline {
+    agent {
+        kubernetes {
+            label 'spacemesh-pod'
+            yamlFile 'jenkins/jobs/KubernetesPod.yaml'
+        }
+    }
+    options { timestamps () }
+    environment {
+      ESPASS = credentials("${CLUSTER}")
+      // Slack configuration
+      SLACK_COLOR_DANGER  = '#E01563'
+    }
+    stages {
+        stage('Run mining pytest') {
+            steps {
+                git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
+                configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) {
+                    container('python') {
+                        script {
+                            def values = "${CLUSTER}".split('_')
+                            sh """
+                                mkdir -p ~/.kube
+                                cp ${GOOGLE_CRED} ${WORKSPACE}/google_application_cred
+                                export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/google_application_cred'
+                                /usr/local/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${WORKSPACE}/google_application_cred
+                                /usr/local/gcloud/google-cloud-sdk/bin/gcloud config set project spacemesh-198810
+                                /usr/local/gcloud/google-cloud-sdk/bin/gcloud container clusters get-credentials '${values[3]}' --zone '${values[2]}' --project spacemesh-198810
+                            """
+                            if ("${TESTS}" == 'All') {
+                                sh """
+                                    echo "Run All tests"
+                                    export ES_PASSWD="${ESPASS}"
+                                    export PYTHONUNBUFFERED=1
+                                    export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/google_application_cred'
+                                    pytest -s -v ./tests/test_bs.py --tc-file=./tests/config.yaml --tc-format=yaml
+                                """
+                            }
+                            else {
+                                sh """
+                                    echo "Run test: ${TESTS}"
+                                    export ES_PASSWD="${ESPASS}"
+                                    export PYTHONUNBUFFERED=1
+                                    export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/google_application_cred'
+                                    pytest -s -v ./tests/test_bs.py::"${TESTS}" --tc-file=./tests/config.yaml --tc-format=yaml
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        failure {
+            script {
+                try {
+                    BUILD_USER = getBuildUser()
+                } catch (Exception e) {
+                    BUILD_USER = ""
+                }
+            }
+            echo "Sending message to Slack"
+            slackSend (color: "${env.SLACK_COLOR_DANGER}",
+                       channel: '#jenkins_notify',
+                       message: "*FAILED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}")
+        } // failure
+    }
+}
