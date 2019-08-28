@@ -36,7 +36,6 @@ podTemplate(label: label, containers: [
                         }
                         else {
                             sh """
-                                set +x
                                 echo "Run test: ${TESTS}"
                                 export ES_PASSWD="${ESPASS}"
                                 export PYTHONUNBUFFERED=1
