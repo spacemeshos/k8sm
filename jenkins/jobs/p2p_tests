@@ -10,8 +10,7 @@ podTemplate(label: label, containers: [
   ])
 {
   node(label) {
-    withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET'),
-                     string(credentialsId: "${CLUSTER}", variable: 'ESPASS')]) {
+    withCredentials([string(credentialsId: "${CLUSTER}", variable: 'ESPASS')]) {
         stage('Run pytest') {
             git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
             configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) { 
@@ -29,7 +28,8 @@ podTemplate(label: label, containers: [
                         if ("${TESTS}" == 'All') {
                             sh """
                                 echo "Run All tests"
-                                export ES_PASSWD="${SECRET}"
+                                export ES_PASSWD="${ESPASS}"
+                                export PYTHONUNBUFFERED=1
                                 export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/google_application_cred'
                                 pytest -s -v ./tests/p2p/test_p2p.py --tc-file=./tests/p2p/config.yaml --tc-format=yaml
                             """
