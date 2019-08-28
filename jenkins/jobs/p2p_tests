@@ -32,6 +32,24 @@ pipeline {
                                 /usr/local/gcloud/google-cloud-sdk/bin/gcloud config set project spacemesh-198810
                                 /usr/local/gcloud/google-cloud-sdk/bin/gcloud container clusters get-credentials '${values[3]}' --zone '${values[2]}' --project spacemesh-198810
                             """
+                            if ("${TESTS}" == 'All') {
+                                sh """
+                                    echo "Run All tests"
+                                    export ES_PASSWD="${ESPASS}"
+                                    export PYTHONUNBUFFERED=1
+                                    export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/google_application_cred'
+                                    pytest -s -v ./tests/p2p/test_p2p.py --tc-file=./tests/p2p/config.yaml --tc-format=yaml
+                                """
+                            }
+                            else {
+                                sh """
+                                    echo "Run test: ${TESTS}"
+                                    export ES_PASSWD="${ESPASS}"
+                                    export PYTHONUNBUFFERED=1
+                                    export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/google_application_cred'
+                                    pytest -s -v ./tests/p2p/test_p2p.py::"${TESTS}" --tc-file=./tests/p2p/config.yaml --tc-format=yaml
+                                """
+                            }
                         }
                     }
                 }
