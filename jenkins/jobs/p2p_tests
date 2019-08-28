@@ -18,15 +18,13 @@ podTemplate(label: label, containers: [
                 container('python') {
                     script {
                         def values = "${CLUSTER}".split('_')
-                        println values[3]
                         sh """
-                            echo '${values[3]}'
                             mkdir -p ~/.kube
                             cp ${GOOGLE_CRED} ${WORKSPACE}/google_application_cred
                             export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/google_application_cred'
                             /usr/local/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${WORKSPACE}/google_application_cred
                             /usr/local/gcloud/google-cloud-sdk/bin/gcloud config set project spacemesh-198810
-                            /usr/local/gcloud/google-cloud-sdk/bin/gcloud container clusters get-credentials spacemesh-lab1 --zone us-east1-b --project spacemesh-198810
+                            /usr/local/gcloud/google-cloud-sdk/bin/gcloud container clusters get-credentials '${values[3]}' --zone '${values[2]}' --project spacemesh-198810
                         """
                         if ("${TESTS}" == 'All') {
                             sh """
