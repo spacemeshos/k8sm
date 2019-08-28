@@ -17,6 +17,8 @@ podTemplate(label: label, containers: [
             configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) { 
                 container('python') {
                     script {
+                        def values = "${CLUSTER}".split('_')
+                        println values[3]
                         sh """
                             mkdir -p ~/.kube
                             cp ${GOOGLE_CRED} ${WORKSPACE}/google_application_cred
