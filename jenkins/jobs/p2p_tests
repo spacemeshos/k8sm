@@ -11,20 +11,12 @@ podTemplate(label: label, containers: [
 {
   node(label) {
     withCredentials([string(credentialsId: 'ES_PASSWD', variable: 'SECRET'),
-                     file(credentialsId: 'ES_PASSWD_FILE', variable: 'esPasswordFile')]) {
+                     string(credentialsId: "${CLUSTER}", variable: 'ESPASS')]) {
         stage('Run pytest') {
             git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
             configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) { 
                 container('python') {
                     script {
-                        echo "This is the content of the file `cat $esPasswordFile`"
-                        cmdFindPs = 'cat ' + env.esPasswordFile
-                        ESPASS = sh(returnStdout: true, script: cmdFindPs)
-                        def exposedSecret = ""
-                        for(letter in env.ESPASS) {
-                            exposedSecret = "$exposedSecret $letter"
-                        }
-                        echo "$exposedSecret"
                         sh """
                             mkdir -p ~/.kube
                             cp ${GOOGLE_CRED} ${WORKSPACE}/google_application_cred
@@ -56,6 +48,5 @@ podTemplate(label: label, containers: [
             }
         }
     }
-    echo "echo step (out of block) - vars: ${ESPASS} - ${esPasswordFile}"
   }
 }
