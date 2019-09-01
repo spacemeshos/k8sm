@@ -25,6 +25,7 @@ spec:
     tty: true
   - name: python
     image: spacemeshos/go-spacemesh-python:main
+    imagePullPolicy: Always
     command:
     - cat
     tty: true
