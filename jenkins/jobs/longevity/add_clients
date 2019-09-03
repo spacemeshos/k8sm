@@ -35,7 +35,10 @@ pipeline {
                             echo "dep is $dep"
                             sh """
                                 echo "Get current deployments"
-                                echo $dep
+                                if [ -z "$dep" ]; then
+                                    echo "Could not find deployment in namespace longevity"
+                                    exit 1
+                                echo "Deployment is: $dep"
                             """
                         }
                     }
