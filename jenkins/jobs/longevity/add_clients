@@ -17,7 +17,7 @@ pipeline {
       SLACK_COLOR_DANGER  = '#E01563'
     }
     stages {
-        stage('Run p2p pytest') {
+        stage('Add Clients') {
             steps {
                 configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) {
                     container('python') {
@@ -40,6 +40,8 @@ pipeline {
                                     exit 1
                                 fi
                                 echo "Deployment is: $dep"
+                                kubectl get deployment "$dep" -n longevity  --export=true -o yaml > client.yaml
+                                sleep 600
                             """
                         }
                     }
