@@ -34,7 +34,7 @@ pipeline {
                             dep = sh(returnStdout: true, script: 'kubectl get deployments -n longevity | tail -1 | cut -d\' \' -f1')
                             sh """
                                 echo "Get current deployments"
-                                echo '${dep}'
+                                echo "${dep}"
                             """
                         }
                     }
