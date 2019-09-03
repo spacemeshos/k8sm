@@ -38,6 +38,7 @@ pipeline {
                                 if [ -z "$dep" ]; then
                                     echo "Could not find deployment in namespace longevity"
                                     exit 1
+                                fi
                                 echo "Deployment is: $dep"
                             """
                         }
