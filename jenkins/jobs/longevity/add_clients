@@ -32,9 +32,10 @@ pipeline {
                                 /usr/local/gcloud/google-cloud-sdk/bin/gcloud container clusters get-credentials '${values[3]}' --zone '${values[2]}' --project spacemesh-198810
                             """
                             def dep = sh(returnStdout: true, script: 'kubectl get deployments -n longevity | tail -1 | cut -d\' \' -f1')
+                            echo "dep is $dep"
                             sh """
                                 echo "Get current deployments"
-                                echo ${dep}
+                                echo $dep
                             """
                         }
                     }
