@@ -19,7 +19,6 @@ pipeline {
     stages {
         stage('Run p2p pytest') {
             steps {
-                git branch: "${TESTS_BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git'
                 configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) {
                     container('python') {
                         script {
