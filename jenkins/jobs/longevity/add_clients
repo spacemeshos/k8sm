@@ -42,7 +42,7 @@ pipeline {
                                 echo "Deployment is: $dep"
                                 kubectl get deployment "$dep" -n longevity  --export=true -o yaml > client.yaml
                                 sed -i -- 's/replicas: [0-9]*/replicas: ${REPLICAS}/g' client.yaml
-                                sleep 600
+                                kubectl create -f client.yaml -n longevity
                             """
                         }
                     }
