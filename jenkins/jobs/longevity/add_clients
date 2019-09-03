@@ -33,8 +33,8 @@ pipeline {
                             """
                             sh """
                                 echo "Get current deployments"
-                                dep=`kubectl get deployments -n longevity | tail -1 | cut -d' ' -f1`
-                                echo "${dep}"
+                                def dep=`kubectl get deployments -n longevity | tail -1 | cut -d' ' -f1`
+                                echo '${dep}'
                             """
                         }
                     }
