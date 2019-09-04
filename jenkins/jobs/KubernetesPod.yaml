@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
   - name: docker
-    image: docker:17.03
+    image: docker:18.09
     imagePullPolicy: IfNotPresent
     command:
     - cat
