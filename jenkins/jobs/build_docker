@@ -1,0 +1,51 @@
+def COLOR_MAP = ['SUCCESS': 'good', 'FAILURE': 'danger', 'UNSTABLE': 'danger', 'ABORTED': 'danger']
+def getBuildUser() {
+    return currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId()
+}
+
+pipeline {
+    agent {
+        kubernetes {
+            label 'spacemesh-pod'
+            yamlFile 'jenkins/jobs/KubernetesPod.yaml'
+        }
+    }
+     options { timestamps () }
+    environment {
+      DOCKER = credentials("dockerhub")
+      // Slack configuration
+      SLACK_COLOR_DANGER  = '#E01563'
+    }
+    stages {
+        stage('Build image and push it to dockerhub') {
+            steps {
+                git branch: "${BRANCH}",url: 'https://github.com/spacemeshos/go-spacemesh.git' 
+                container('docker') {
+                    script {
+                        sh """
+                            apk update && apk add make git bash
+                            export DOCKER_PASSWORD=$DOCKER_PSW
+                            export DOCKER_USERNAME=$DOCKER_USR
+                            make dockerpush  
+                        """
+                    }
+                }
+            }
+        }
+    }
+    post {
+        failure {
+            script {
+                try {
+                    BUILD_USER = getBuildUser()
+                } catch (Exception e) {
+                    BUILD_USER = ""
+                }
+            }
+            echo "Sending message to Slack"
+            slackSend (color: "${env.SLACK_COLOR_DANGER}",
+                       channel: '#jenkins_notify',
+                       message: "*FAILED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}")
+        } // failure
+    }
+}
