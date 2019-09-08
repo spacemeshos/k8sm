@@ -7,7 +7,7 @@ pipeline {
   }
   options { timestamps () }
   stages {
-    stage('Setup Spacemesh Network') {
+    stage('Destroy Spacemesh Network') {
       steps {
         container('kubectl') {
           sh """
