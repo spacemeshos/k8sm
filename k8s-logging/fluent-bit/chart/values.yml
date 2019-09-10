@@ -1,0 +1,39 @@
+image:
+  fluent_bit:
+    repository: fluent/fluent-bit
+    tag: 1.2.2-debug
+
+backend:
+  type: forward
+  forward:
+    host: fluentd
+    port: 24224
+
+parsers:
+  enabled: false
+  regex: 
+    - name: panic
+      regex: panic*
+      timeKey: time
+  json: 
+    - name: json1
+      extraEntries: |-
+        Decode_Field_As  escaped   log  do_next
+        Decode_Field_As  json log
+
+extraEntries:
+  filter: |-
+    Keep_Log            On
+  output: |-
+    Buffer_Size            False 
+    Generate_ID            On
+
+nodeSelector: 
+  role: tests
+
+service:
+  logLevel: trace
+
+input:
+  tail:
+    path: /var/log/containers/sm-*.log
