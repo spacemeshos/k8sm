@@ -50,7 +50,7 @@ deployment:
   annotations: {}
 
 service:
-  type: NodePort
+  type: LoadBalancer
   # clusterIP: None
   # portName: kibana-svc
   externalPort: 443
@@ -74,16 +74,15 @@ service:
     # kubernetes.io/cluster-service: "true"
   ## Limit load balancer source ips to list of CIDRs (where available)
   # loadBalancerSourceRanges: []
-  selector:
-    role: "infra"
+  selector: {}
 
 ingress:
   enabled: false
-  # hosts:
-    # - kibana.localhost.localdomain
-    # - localhost.localdomain/kibana
-  # annotations:
-  #   kubernetes.io/ingress.class: nginx
+  #hosts:
+  #- spacemesh-kibana-test
+  # - localhost.localdomain/kibana
+  #annotations:
+  #  kubernetes.io/ingress.class: nginx
   #   kubernetes.io/tls-acme: "true"
   # tls:
     # - secretName: chart-example-tls
@@ -153,7 +152,8 @@ tolerations: []
 
 # Node labels for pod assignment
 # Ref: https://kubernetes.io/docs/user-guide/node-selection/
-nodeSelector: {}
+nodeSelector:
+  role: infra
 
 podAnnotations: {}
 replicaCount: 1
