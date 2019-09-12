@@ -113,7 +113,7 @@ cluster:
 client:
   name: client
   replicas: 3
-  serviceType: NodePort
+  serviceType: LoadBalancer
   ## If coupled with serviceType = "NodePort", this will set a specific nodePort to the client HTTP port
   # httpNodePort: 30920
   loadBalancerIP: {}
