@@ -2,58 +2,7 @@ pipeline {
     agent {
         kubernetes {
             label 'spacemesh-pod'
-            yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  name: spacemesh-pod
-spec:
-  containers:
-  - name: terraform
-    image: "hashicorp/terraform"
-    command:
-    - "cat"
-    tty: true
-    volumeMounts:
-    - mountPath: "/home/jenkins/agent"
-      name: "workspace-volume"
-      readOnly: false
-  - name: docker
-    image: docker:18.09
-    imagePullPolicy: IfNotPresent
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-      - name: docker
-        mountPath: /var/run/docker.sock
-  - name: git
-    image: alpine/git
-    command:
-    - cat
-    tty: true
-  - name: helm
-    image: dtzar/helm-kubectl
-    command:
-    - cat
-    tty: true
-  - name: gcloud
-    image: gcr.io/cloud-builders/gcloud
-    imagePullPolicy: Always
-    command:
-    - cat
-    tty: true
-  - name: python
-    image: spacemeshos/go-spacemesh-python:main
-    imagePullPolicy: Always
-    command:
-    - cat
-    tty: true
-  volumes:
-  - name: docker
-    hostPath:
-      path: /var/run/docker.sock
-"""
+            yamlFile 'jenkins/jobs/KubernetesPod.yaml'
         }
     }
     options { timestamps () }
