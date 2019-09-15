@@ -95,7 +95,10 @@ spec:
                                 gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${ZONE} --project spacemesh-198810
                             """
 
-                            //echo "Set Context"
+                            echo "Set Context"
+                            context=sh(returnStdout: true, script: 'kubectl config current-context').trim()
+                            echo "${context}"
+
                             //sh """
                             //   kubectl config current-context
                             //   kubectl config use-context gke_spacemesh-198810_us-central1-a_spacemesh-xxx
