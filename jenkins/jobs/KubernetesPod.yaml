@@ -4,6 +4,15 @@ metadata:
   name: spacemesh-pod
 spec:
   containers:
+  - name: terraform
+    image: "hashicorp/terraform"
+    command:
+    - "cat"
+    tty: true
+    volumeMounts:
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+      readOnly: false
   - name: docker
     image: docker:18.09
     imagePullPolicy: IfNotPresent
@@ -15,6 +24,17 @@ spec:
         mountPath: /var/run/docker.sock
   - name: kubectl
     image: lachlanevenson/k8s-kubectl:v1.8.0
+    command:
+    - cat
+    tty: true
+  - name: helm
+    image: dtzar/helm-kubectl
+    command:
+    - cat
+    tty: true
+  - name: gcloud
+    image: gcr.io/cloud-builders/gcloud
+    imagePullPolicy: Always
     command:
     - cat
     tty: true
