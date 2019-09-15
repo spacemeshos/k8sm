@@ -27,7 +27,7 @@ variable "node_pools" {
       disk_type          = "pd-ssd"
       preemptible        = false
       auto_repair        = true
-      auto_upgrade       = true
+      auto_upgrade       = false
     },
     {
       name               = "test-pool"
@@ -40,7 +40,7 @@ variable "node_pools" {
       disk_type          = "pd-standard"
       preemptible        = false
       auto_repair        = true
-      auto_upgrade       = true
+      auto_upgrade       = false
     },
   ]
 }
