@@ -12,6 +12,7 @@ resource "google_container_cluster" "cluster" {
   provider = "google-beta"
   name     = "${var.cluster_name}"
   location = "${var.zone}"
+  min_master_version = "${var.k8s_version}"
 
   remove_default_node_pool = true
   initial_node_count = 1

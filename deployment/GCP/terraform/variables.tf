@@ -10,6 +10,10 @@ variable "zone" {
   default = "us-west1-a"
 }
 
+variable "k8s_version" {
+  default = "1.13.7-gke.24"
+}
+
 variable "node_pools" {
   default = [
     {
