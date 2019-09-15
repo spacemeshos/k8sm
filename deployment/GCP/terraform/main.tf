@@ -1,11 +1,9 @@
 provider "google" {
-  //  credentials = "${file("google_application_cred")}"
   project = "${var.project_name}"
   zone    = "${var.zone}"
 }
 
 provider "google-beta" {
-  //  credentials = "${file("google_application_cred")}"
   project = "${var.project_name}"
   zone    = "${var.zone}"
 }
@@ -26,12 +24,6 @@ resource "google_container_cluster" "cluster" {
   }
 
   default_max_pods_per_node = 110
-
-  //  master_auth {
-  //    client_certificate_config {
-  //      issue_client_certificate = true
-  //    }
-  //  }
 }
 
 resource "google_container_node_pool" "node_pool" {
