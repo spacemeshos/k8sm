@@ -74,8 +74,7 @@ spec:
                                 cp ${GOOGLE_CRED} ${WORKSPACE}/google_application_cred
                                 export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/google_application_cred'
                                 cd ${WORKSPACE}/deployment/GCP/terraform
-                                #terraform init
-                                #terraform apply -var="cluster_name=${CLUSTER_NAME}" -var="zone=${ZONE}" -var="project_name=spacemesh-198810" -auto-approve
+                                terraform init
                             """
                         }
                     }
