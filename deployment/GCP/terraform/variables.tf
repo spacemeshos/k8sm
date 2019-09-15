@@ -16,7 +16,7 @@ variable "node_pools" {
       name               = "infra-pool"
       min_node_count     = 1
       max_node_count     = 10
-      initial_node_count = 1
+      initial_node_count = 6
       machine_type       = "n1-highmem-4"
       image_type         = "COS"
       disk_size_gb       = 300
