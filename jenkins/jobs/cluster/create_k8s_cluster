@@ -92,14 +92,14 @@ spec:
                                 export GOOGLE_APPLICATION_CREDENTIALS='${WORKSPACE}/google_application_cred'
                                 gcloud auth activate-service-account --key-file ${WORKSPACE}/google_application_cred
                                 gcloud config set project spacemesh-198810
-                                gcloud container clusters get-credentials 'spacemesh-xxx' --zone 'us-central1-a' --project spacemesh-198810
+                                gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${ZONE} --project spacemesh-198810
                             """
 
-                            echo "Set Context"
-                            sh """
-                               kubectl config current-context
-                               kubectl config use-context gke_spacemesh-198810_us-central1-a_spacemesh-xxx
-                            """
+                            //echo "Set Context"
+                            //sh """
+                            //   kubectl config current-context
+                            //   kubectl config use-context gke_spacemesh-198810_us-central1-a_spacemesh-xxx
+                            //"""
                             
                             echo "Create namespace"
                                 try {
