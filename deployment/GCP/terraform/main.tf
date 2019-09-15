@@ -15,7 +15,7 @@ resource "google_container_cluster" "cluster" {
   min_master_version = "${var.k8s_version}"
 
   remove_default_node_pool = true
-  initial_node_count = 1
+  initial_node_count = 7
   logging_service    = "none"
   monitoring_service = "none"
 
