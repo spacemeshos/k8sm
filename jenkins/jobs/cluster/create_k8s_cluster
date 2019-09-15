@@ -99,11 +99,6 @@ spec:
                             context=sh(returnStdout: true, script: 'kubectl config current-context').trim()
                             echo "${context}"
 
-                            //sh """
-                            //   kubectl config current-context
-                            //   kubectl config use-context gke_spacemesh-198810_us-central1-a_spacemesh-xxx
-                            //"""
-                            
                             echo "Create namespace"
                                 try {
                                     sh """
@@ -132,13 +127,14 @@ spec:
                 container('helm') {
                     script {
                         echo 'Install Helm'
+                        context=sh(returnStdout: true, script: 'kubectl config current-context').trim()
                         sh """
                             kubectl config current-context
                             kubectl create -f ${WORKSPACE}/k8s-logging/rbac-config.yaml
-                            helm init --force-upgrade --service-account tiller --kube-context gke_spacemesh-198810_us-central1-a_spacemesh-xxx
+                            helm init --force-upgrade --service-account tiller --kube-context ${context}
                             # Wait for tiller-deploy pod to be ready
                             sleep 30 
-                            helm list --kube-context gke_spacemesh-198810_us-central1-a_spacemesh-xxx
+                            helm list --kube-context ${context}
                         """
                     }
                 }    
