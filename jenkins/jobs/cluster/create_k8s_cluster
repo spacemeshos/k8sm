@@ -63,7 +63,7 @@ spec:
       KUBECONFIG = "${WORKSPACE}"+'/kube-config/config'
     }
     stages {
-        stage('Pre Install stage') {
+        stage('Deploy k8s Cluster') {
             steps {
                 git branch: 'master', url: 'https://github.com/spacemeshos/k8sm.git'
                 configFileProvider([configFile(fileId: 'google_app_cred', variable: 'GOOGLE_CRED')]) {
