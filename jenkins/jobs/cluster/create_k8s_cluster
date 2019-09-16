@@ -173,6 +173,30 @@ pipeline {
                 }
             }
         }
+        stage('Post Install') {
+            steps {
+                container('helm') {
+                    script {
+                        def es_url=sh(returnStdout: true, script: "kubectl get svc --namespace logging elasticsearch-client -o jsonpath=\'{.status.loadBalancer.ingress[0].ip}\'").trim()
+                        def kibana_url=sh(returnStdout: true, script: "kubectl get svc --namespace logging kibana -o jsonpath=\'{.status.loadBalancer.ingress[0].ip}\'").trim()
+                        sh """
+                            echo "Post Install"
+                            echo "gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${ZONE} --project spacemesh-198810" > cluster_connect.sh
+                            echo "Elasticsearch:"
+                            echo "export ES_URL=http://${es_url}:9200" >> cluster_connect.sh
+                            
+                            echo "Kibana:"
+                            echo "export KIBANA_URL=http://${kibana_url}:443" >> cluster_connect.sh
+                        """
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'cluster_connect.sh', onlyIfSuccessful: true
+        }
     }
 }
 
