@@ -34,7 +34,7 @@ variable "node_pools" {
       min_node_count     = 1
       max_node_count     = 300
       initial_node_count = 1
-      machine_type       = "n1-standard-1"
+      machine_type       = "n1-standard-4"
       image_type         = "COS"
       disk_size_gb       = 50
       disk_type          = "pd-standard"
