@@ -23,7 +23,7 @@ variable "node_pools" {
       initial_node_count = 6
       machine_type       = "n1-highmem-4"
       image_type         = "COS"
-      disk_size_gb       = 300
+      disk_size_gb       = 100
       disk_type          = "pd-ssd"
       preemptible        = false
       auto_repair        = true
