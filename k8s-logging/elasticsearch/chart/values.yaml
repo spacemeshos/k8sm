@@ -235,9 +235,9 @@ data:
   additionalJavaOpts: "-Xms4g -Xmx4g"
   persistence:
     enabled: true
-    accessMode: ReadWriteMany
+    accessMode: ReadWriteOnce
     name: data
-    size: "2000Gi"
+    size: "1000Gi"
     storageClass: "ssd"
   readinessProbe:
     httpGet:
