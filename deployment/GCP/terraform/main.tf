@@ -19,11 +19,6 @@ resource "google_container_cluster" "cluster" {
   logging_service    = "none"
   monitoring_service = "none"
 
-  #  VPC-native (alias IP)
-  ip_allocation_policy {
-    use_ip_aliases = true
-  }
-
   default_max_pods_per_node = 110
 }
 
