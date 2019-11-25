@@ -81,7 +81,7 @@ pipeline {
                         sh """
                             kubectl config current-context
                             kubectl create -f ${WORKSPACE}/k8s-logging/rbac-config.yaml
-                            helm init --wait --service-account tiller --kube-context ${context}
+                            helm init --service-account tiller --kube-context ${context}
                             # Wait for tiller-deploy pod to be ready
                             sleep 30 
                             helm list --kube-context ${context}
