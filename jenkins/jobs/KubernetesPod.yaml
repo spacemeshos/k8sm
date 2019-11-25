@@ -28,7 +28,7 @@ spec:
     - cat
     tty: true
   - name: helm
-    image: dtzar/helm-kubectl
+    image: dtzar/helm-kubectl:2.16.0
     command:
     - cat
     tty: true
