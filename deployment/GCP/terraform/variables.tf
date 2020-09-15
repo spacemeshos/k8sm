@@ -11,7 +11,7 @@ variable "zone" {
 }
 
 variable "k8s_version" {
-  default = "1.14.8-gke.12"
+  default = "1.16.13-gke.1"
 }
 
 variable "node_pools" {
