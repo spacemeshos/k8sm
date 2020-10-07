@@ -7,7 +7,7 @@ output "cluster_ca_certificate" {
 }
 
 output "cluster_zone" {
-  value = "${google_container_cluster.cluster.zone}"
+  value = "${google_container_cluster.cluster.location}"
 }
 
 output "cluster_name" {
